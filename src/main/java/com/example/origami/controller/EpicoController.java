@@ -4,6 +4,8 @@ import com.example.origami.epico.Epico;
 import com.example.origami.epico.EpicoRepository;
 import com.example.origami.projeto.Projeto;
 import com.example.origami.projeto.ProjetoRepository;
+import com.example.origami.tipos.TipoEpico;
+import com.example.origami.tipos.TipoEpicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +20,20 @@ public class EpicoController {
     private EpicoRepository repository;
     @Autowired
     private ProjetoRepository projetoRepository;
-    @PostMapping("{projetoId}")
-    public void saveEpico(@RequestBody Epico epico, @PathVariable Long projetoId){   // SALVAR EPICO NO BANCO A PARTIR DO ID DO PROJETO
+    @Autowired
+    private TipoEpicoRepository tipoEpicoRepository;
+    @PostMapping("{projetoId}/{tipoEpicoId}")
+    public void saveEpico(@RequestBody Epico epico, @PathVariable Long projetoId, @PathVariable Long tipoEpicoId){   // SALVAR EPICO NO BANCO A PARTIR DO ID DO PROJETO
         Optional<Projeto> optionalProjeto = projetoRepository.findById(projetoId);
-        if (optionalProjeto.isPresent()){
+        Optional<TipoEpico> optionalTipoEpico = tipoEpicoRepository.findById(tipoEpicoId);
+
+        if (optionalProjeto.isPresent() && optionalTipoEpico.isPresent()){
+
             Projeto projeto = optionalProjeto.get();
+            TipoEpico tipo = optionalTipoEpico.get();
             epico.setProjeto(projeto);
+            epico.setTipo(tipo);
+
             repository.save(epico);
         }
     }
@@ -43,20 +53,17 @@ public class EpicoController {
         return projeto.getBacklog();
     }
     @DeleteMapping("{id}")
-    public void deleteProjeto(@PathVariable Long id) {  // DELETA EPICO POR ID
+    public void deleteEpico(@PathVariable Long id) {  // DELETA EPICO POR ID
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
             throw new RuntimeException("Epico not found with id: " + id);
         }
     }
-    @PutMapping("{id}")
-    public void updateProjeto(@PathVariable Long id, @RequestBody Epico epico) {
-        if (repository.existsById(id) && epico.getProjeto() != null) {  // VERIFICA SE O ID DO EPICO A SER ALTERADO EXISTE E SE HÁ PROJETO PREENCHIDO
-            epico.setId(id); // Certifique-se de definir o ID para o projeto
-            repository.save(epico);
-        } else {
-            throw new RuntimeException("Epico not found with id: " + id);
-        }
+    @PutMapping("titulo/{id}")
+    public void updateTituloEpico(@PathVariable Long id, @RequestBody Epico epico) {
+        Epico existingEpico = repository.findById(id).orElseThrow(() -> new RuntimeException("Epico nao encontrado com id: " + id));
+        existingEpico.setTitulo(epico.getTitulo());
+        repository.save(existingEpico);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.origami.epico;
 
 import com.example.origami.projeto.Projeto;
+import com.example.origami.tipos.TipoEpico;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,4 +18,6 @@ public class Epico {
     private String titulo;
     @ManyToOne @JoinColumn(name = "projeto_id")
     private Projeto projeto;
+    @ManyToOne @JoinColumn(name = "tipo_id")
+    private TipoEpico tipo;
 }

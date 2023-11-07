@@ -38,7 +38,7 @@ public class ProjetoController {
     }
     @GetMapping("{id}")
     public Projeto getProjeto(@PathVariable Long id) {  // CONSULTA PROJETO POR ID
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Projeto not found with id: " + id));
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Projeto nao encontrado com id: " + id));
     }
 
     @DeleteMapping("{id}")
@@ -46,17 +46,14 @@ public class ProjetoController {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new RuntimeException("Projeto not found with id: " + id);
+            throw new RuntimeException("Projeto nao encontrado com id: " + id);
         }
     }
 
     @PutMapping("{id}")
-    public void updateProjeto(@PathVariable Long id, @RequestBody Projeto projeto) {    // NAO ESTA FUNCIONANDO!!!
-        if (repository.existsById(id)) {
-            projeto.setId(id); // Certifique-se de definir o ID para o projeto
-            repository.save(projeto);
-        } else {
-            throw new RuntimeException("Projeto not found with id: " + id);
-        }
+    public void updateProjeto(@PathVariable Long id, @RequestBody Projeto projeto) {
+        Projeto existingProjeto = repository.findById(id).orElseThrow(() -> new RuntimeException("Projeto nao encontrado com id: " + id));
+        existingProjeto.setNome(projeto.getNome()); // ATUALIZA O CAMPO NECESSARIO
+        repository.save(existingProjeto);
     }
 }
