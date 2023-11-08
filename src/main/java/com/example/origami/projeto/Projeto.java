@@ -21,4 +21,7 @@ public class Projeto {
     @JsonIgnore @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true)  // Permite operacoes em cascata no backlog e remove o epico do banco caso seja removido do backlog
     private List<Epico> backlog;
 
+    public Projeto(ProjetoRequestDTO data){
+        this.nome = data.nome();
+    }
 }

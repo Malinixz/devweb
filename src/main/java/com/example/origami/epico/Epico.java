@@ -29,12 +29,10 @@ public class Epico {
     private Integer relevancia;
     private String agente;      // AGENTE PARA AS HU'S
     private String entidade;    // ENTIDADE PARA AS HU'S
-
     @ManyToOne @JoinColumn(name = "projeto_id")
     private Projeto projeto;
     @ManyToOne @JoinColumn(name = "tipo_id")
     private TipoEpico tipo;
-
     @JsonIgnore @OneToMany(mappedBy = "epico", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoriaUsuario> hists;
 
