@@ -30,11 +30,11 @@ public class HistoriaUsuario {
         this.setCategoria(categoria);
         this.setEpico(epico);
         this.setTipo(tipo);
-        this.setDescricao(epico.getAgente(), tipo.getDescricao(), epico.getEntidade());
+        this.geraDesc();
     }
 
-    public void setDescricao(String agente, String desc, String entidade){
-        this.descricao = "Eu, como " + agente + ", quero " + desc + " um/uma " + entidade;
+    public void geraDesc(){
+        this.descricao = "Eu, como " + this.getEpico().getAgente() + ", quero " + this.getTipo().getDescricao() + " um/uma " + this.getEpico().getEntidade();
     }
 
     /*public void setTipo(TipoHist tipo) {   // GARANTE QUE A DESCRICAO SEJA ALTERADA SEMPRE QUE HOUVER MUDANÇA NO TIPO

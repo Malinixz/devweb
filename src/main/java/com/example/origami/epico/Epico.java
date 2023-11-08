@@ -23,7 +23,7 @@ public class Epico {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;      // ACAO DO EPICO, EXEMPLO : "CADASTRAR"
-    private String descricao;   // TRATAR NO FRONT PARA NAO MANDAR DESCRICAO
+    private String descricao;   // NÃO PREENCHER DESCRIÇÃO NO FRONT
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
     private Integer relevancia;
@@ -49,9 +49,9 @@ public class Epico {
     public List<HistoriaUsuario> geraHists(){
         List<HistoriaUsuario> listHists = new ArrayList<>();
 
-        for (TipoHist tipo : this.getTipo().getTiposHist()) {
+        for (TipoHist tipoHist : this.getTipo().getTiposHist()) {
             // INSTANCIA HISTORIA DE USUARIO
-            HistoriaUsuario historiaUsuario = new HistoriaUsuario(this.getCategoria(),tipo,this);
+            HistoriaUsuario historiaUsuario = new HistoriaUsuario(this.getCategoria(),tipoHist,this);
             // ADICIONA NO ARRAY
             listHists.add(historiaUsuario);
         }
