@@ -1,7 +1,12 @@
 package com.example.origami.tipos;
 
+import com.example.origami.historiausuario.HistoriaUsuario;
+import com.example.origami.tarefa.Tarefa;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity(name = "tipotarefa")
 @Table(name = "tipotarefa")
@@ -17,4 +22,7 @@ public class TipoTarefa {
     String descricao;
     @ManyToOne @JoinColumn(name = "tipohist_id")
     private TipoHist tipoHist;
+    @JsonIgnore
+    @OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tarefa> tarefas;
 }

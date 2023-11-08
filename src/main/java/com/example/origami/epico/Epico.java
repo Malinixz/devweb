@@ -47,9 +47,10 @@ public class Epico {
 
     // METODO PARA GERAR AS HISTORIAS DE USUARIO
     public List<HistoriaUsuario> geraHists(){
-        List<HistoriaUsuario> listHists = new ArrayList<>();
+        List<HistoriaUsuario> listHists = new ArrayList<>();        // INSTANCIA LISTA DE HISTORIAS A SER ALIMENTADA
+        List<TipoHist> tiposHists = this.getTipo().getTiposHist();  // LISTA DE TIPOS DE HISTORIAS DESSE TIPO DE EPICO
 
-        for (TipoHist tipoHist : this.getTipo().getTiposHist()) {
+        for (TipoHist tipoHist : tiposHists) {
             // INSTANCIA HISTORIA DE USUARIO
             HistoriaUsuario historiaUsuario = new HistoriaUsuario(this.getCategoria(),tipoHist,this);
             // ADICIONA NO ARRAY

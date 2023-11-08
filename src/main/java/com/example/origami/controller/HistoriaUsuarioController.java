@@ -3,6 +3,7 @@ package com.example.origami.controller;
 import com.example.origami.epico.Epico;
 import com.example.origami.epico.EpicoRepository;
 import com.example.origami.historiausuario.HistoriaUsuario;
+import com.example.origami.historiausuario.HistResponseDTO;
 import com.example.origami.historiausuario.HistoriaUsuarioRepository;
 import com.example.origami.tipos.TipoHist;
 import com.example.origami.tipos.TipoHistRepository;
@@ -38,13 +39,17 @@ public class HistoriaUsuarioController {
             historiaUsuarioRepository.save(historia); // Salva cada história de usuário no banco
         }
     }
+    // GETALL COM DTO
     @GetMapping
-    public List<HistoriaUsuario> getAllHistoriaUsuarios() {
-        return historiaUsuarioRepository.findAll();
+    public List<HistResponseDTO> getAllHistoriaUsuarios() {
+        List<HistResponseDTO> historias = historiaUsuarioRepository.findAll().stream().map(HistResponseDTO::new).toList();
+        return historias;
     }
+    // GET COM DTO
     @GetMapping("{id}")
-    public HistoriaUsuario getHistoriaUsuario(@PathVariable Long id) {
-        return historiaUsuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Historia de Usuario nao encontrado com id: " + id));
+    public HistResponseDTO getHistoriaUsuario(@PathVariable Long id) {
+        HistoriaUsuario historiaUsuario = historiaUsuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("História de Usuário não encontrada com ID: " + id));
+        return new HistResponseDTO(historiaUsuario);
     }
     @DeleteMapping("{id}")
     public void deleteHistoriaUsuario(@PathVariable Long id) {

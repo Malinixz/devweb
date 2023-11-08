@@ -2,9 +2,15 @@ package com.example.origami.historiausuario;
 
 import com.example.origami.epico.Categoria;
 import com.example.origami.epico.Epico;
+import com.example.origami.tarefa.Tarefa;
 import com.example.origami.tipos.TipoHist;
+import com.example.origami.tipos.TipoTarefa;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "hist")
 @Table(name = "hist")
@@ -25,6 +31,9 @@ public class HistoriaUsuario {
     @ManyToOne @JoinColumn(name = "epico_id")
     private Epico epico;
 
+    @JsonIgnore @OneToMany(mappedBy = "histUsua", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tarefa> tarefas;
+
 
     public HistoriaUsuario(Categoria categoria, TipoHist tipo, Epico epico){
         this.setCategoria(categoria);
@@ -37,8 +46,17 @@ public class HistoriaUsuario {
         this.descricao = "Eu, como " + this.getEpico().getAgente() + ", quero " + this.getTipo().getDescricao() + " um/uma " + this.getEpico().getEntidade();
     }
 
-    /*public void setTipo(TipoHist tipo) {   // GARANTE QUE A DESCRICAO SEJA ALTERADA SEMPRE QUE HOUVER MUDANÇA NO TIPO
-        this.tipo = tipo;
-        this.setDescricao(this.getEpico().getAgente(),tipo.getDescricao(),this.getEpico().getEntidade());
-    }*/
+    // METODO PARA GERAR AS TAREFAS
+    public List<Tarefa> geraTarefas(){
+        List<Tarefa> listTarefas = new ArrayList<>();
+        List<TipoTarefa> tiposTarefa = this.getTipo().getTiposTarefa();
+
+        for (TipoTarefa tipoTarefa : tiposTarefa){
+            // INSTANCIA TAREFA
+            Tarefa tarefa = new Tarefa(tipoTarefa,this);
+            // ADICIONA NO ARRAY
+            listTarefas.add(tarefa);
+        }
+        return listTarefas;
+    }
 }
