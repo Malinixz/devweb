@@ -19,8 +19,13 @@ public class TipoHist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String descricao;
+
     @ManyToOne @JoinColumn(name = "tipoepic_id")
     private TipoEpico tipoepico;
+
+    @JsonIgnore @OneToMany(mappedBy = "tipoHist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TipoTarefa> tiposTarefa;
+
     @JsonIgnore @OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoriaUsuario> historias;
 }

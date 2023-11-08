@@ -22,5 +22,5 @@ public class TipoEpico {
     @JsonIgnore @OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Epico> epicos;
     @JsonIgnore @OneToMany(mappedBy = "tipoepico", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TipoHist> tipohists;
+    private List<TipoHist> tiposHist;
 }

@@ -2,10 +2,7 @@ package com.example.origami.controller;
 
 import com.example.origami.epico.Epico;
 import com.example.origami.projeto.Projeto;
-import com.example.origami.tipos.TipoEpico;
-import com.example.origami.tipos.TipoEpicoRepository;
-import com.example.origami.tipos.TipoHist;
-import com.example.origami.tipos.TipoHistRepository;
+import com.example.origami.tipos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +17,10 @@ public class TiposController {
     private TipoEpicoRepository tipoEpicoRepository;
     @Autowired
     private TipoHistRepository tipoHistRepository;
+    @Autowired
+    private TipoTarefaRepository tipoTarefaRepository;
+
+
 
     // CRUD PARA TIPO EPICO
     @GetMapping("epico")
@@ -49,7 +50,7 @@ public class TiposController {
         tipoEpicoRepository.deleteById(id);
     }
 
-
+/*--------------------------------------------------------------------------------------------------------------------*/
 
     // CRUD PARA TIPO DE HISTORIA DE USUARIO
     @PostMapping("hist/{tipoEpicId}")
@@ -81,5 +82,37 @@ public class TiposController {
         TipoHist existingTipoHist = tipoHistRepository.findById(id).orElseThrow(() -> new RuntimeException("TipoHist nao encontrado com id: " + id));
         existingTipoHist.setDescricao(tipoHist.getDescricao());
         tipoHistRepository.save(existingTipoHist);
+    }
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+    // CRUD PARA TIPOS DE TAREFAS
+    @PostMapping("tarefa/{tipoHistId}")
+    public void saveTipoTarefa(@RequestBody TipoTarefa tipoTarefa,@PathVariable Long tipoHistId){
+        Optional<TipoHist> optionalTipoHist = tipoHistRepository.findById(tipoHistId);   // PROCURA O TIPOHIST POR ID
+        if(optionalTipoHist.isPresent()){                                                // VERIFICA SE EXISTE
+            TipoHist tipoHist = optionalTipoHist.get();
+            tipoTarefa.setTipoHist(tipoHist);                                            // SETA O TIPOHIST DO TIPOTAREFA
+
+            tipoTarefaRepository.save(tipoTarefa);                                       // SALVA O TIPOTAREFA NO BANCO
+        }
+    }
+    @DeleteMapping("tarefa/{id}")
+    public void deleteTarefaHist(@PathVariable Long id) {
+        tipoTarefaRepository.deleteById(id);
+    }
+    @GetMapping("tarefa")
+    public List<TipoTarefa> getAllTiposTarefa() {
+        return tipoTarefaRepository.findAll();
+    }
+    @GetMapping("tarefa/{id}")
+    public Optional<TipoTarefa> getTipoTarefaById(@PathVariable Long id) {
+        return tipoTarefaRepository.findById(id);
+    }
+    @PutMapping("tarefa/{id}")
+    public void updateDescTipoTarefa(@PathVariable Long id, @RequestBody TipoTarefa tipoTarefa) {
+        TipoTarefa existingTipoTarefa = tipoTarefaRepository.findById(id).orElseThrow(() -> new RuntimeException("TipoTarefa nao encontrado com id: " + id));
+        existingTipoTarefa.setDescricao(tipoTarefa.getDescricao());
+        tipoTarefaRepository.save(existingTipoTarefa);
     }
 }
